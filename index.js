@@ -73,6 +73,8 @@ function animate() {
 
   if (keys.a.pressed) {
     player.velocity.x = -5
+  } else {
+    player.velocity.x = 0
   }
 }
 
@@ -82,7 +84,6 @@ addEventListener('keydown', ({key}) => {
   switch (key) {
     case 'a':
       console.log('left')
-      
       keys.a.pressed = true
       break
     case 'd':
@@ -92,6 +93,24 @@ addEventListener('keydown', ({key}) => {
     case ' ':
       console.log('space')
       keys.space.pressed = true
+      break
+    
+  }
+})
+
+addEventListener('keyup', ({key}) => {
+  switch (key) {
+    case 'a':
+      console.log('left')
+      keys.a.pressed = false
+      break
+    case 'd':
+      console.log('right')
+      keys.d.pressed = false
+      break
+    case ' ':
+      console.log('space')
+      keys.space.pressed = false
       break
     
   }
