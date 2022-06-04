@@ -31,28 +31,68 @@ class Player {
   draw() {
     // c.fillStyle = 'red'
     // c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    
+    c.drawImage(
+      this.image, 
+      this.position.x, 
+      this.position.y, 
+      this.width,
+      this.height 
+    )
+  }
+
+  update() {
     if (this.image) {
-      c.drawImage(
-        this.image, 
-        this.position.x, 
-        this.position.y, 
-        this.width,
-        this.height 
-      )
-    }
+      this.draw()
+      this.position.x +=  this.velocity.x
+    } 
   }
 }
 
 
 
 const player = new Player()
+const keys = {
+  a: {
+    pressed: false
+  },
+  d: {
+    pressed: false
+  },
+  space: {
+    pressed: false
+  }
+}
 
 
 function animate() {
   requestAnimationFrame(animate)
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
-  player.draw()
+  player.update()
+
+  if (keys.a.pressed) {
+    player.velocity.x = -5
+  }
 }
 
 animate()
+
+addEventListener('keydown', ({key}) => {
+  switch (key) {
+    case 'a':
+      console.log('left')
+      
+      keys.a.pressed = true
+      break
+    case 'd':
+      console.log('right')
+      keys.d.pressed = true
+      break
+    case ' ':
+      console.log('space')
+      keys.space.pressed = true
+      break
+    
+  }
+})
