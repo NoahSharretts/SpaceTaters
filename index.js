@@ -39,7 +39,7 @@ class Player {
 
     c.rotate(this.rotation)
 
-    c.translate(player.position.x - player.width / 2, player.position.y - player.height / 2)
+    c.translate(-player.position.x - player.width / 2, -player.position.y - player.height / 2)
 
 
     c.drawImage(
@@ -91,6 +91,7 @@ function animate() {
     player.rotation = .15
   }else {
     player.velocity.x = 0
+    player.rotation = 0
   }
 
   
