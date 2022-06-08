@@ -198,6 +198,8 @@ const keys = {
 }
 
 let frames = 0
+let randomInterval = Math.floor(Math.random() * 500 + 500)
+console.log(randomInterval)
 
 function animate() {
   requestAnimationFrame(animate)
@@ -232,9 +234,13 @@ function animate() {
     player.velocity.x = 0
     player.rotation = 0
   }
-
-  if (frames % 1000 === 0) {
+  // console.log(frames)
+  // spawing new enemies
+  if (frames % randomInterval === 0) {
    grinds.push(new Grid())
+   randomInterval = Math.floor(Math.random() * 500 + 500)
+   frames = 0
+   console.log(randomInterval)
   }
 
   frames++
