@@ -14,6 +14,7 @@ class Player {
     }
 
     this.rotation = 0
+    this.opacity = 1
 
     const image = new Image()
     image.src = './images/spaceship.png'
@@ -35,6 +36,7 @@ class Player {
     // c.fillRect(this.position.x, this.position.y, this.width, this.height)
     
     c.save()
+    c.globalAlpha = this.opacity
     c.translate(player.position.x + player.width / 2, player.position.y + player.height / 2)
 
     c.rotate(this.rotation)
@@ -86,10 +88,10 @@ class Projectile {
 }
 
 class Particle {
-  constructor({ position, velocity, radius, color }) {
+  constructor({ position, velocity, radius, color, fades }) {
     this.position = position
     this.velocity = velocity
-
+    this.fades = fades
     this.opacity = 1
     this.radius = radius
     this.color = color
@@ -111,7 +113,7 @@ class Particle {
     this.position.x +=  this.velocity.x
     this.position.y +=  this.velocity.y
 
-    this.opacity -= .01
+    if (this.fades) this.opacity -= .01
   }
 }
 
@@ -266,9 +268,29 @@ const keys = {
 
 let frames = 0
 let randomInterval = Math.floor(Math.random() * 500 + 500)
+let game = {
+  over: false,
+  active: true
+}
 console.log(randomInterval)
 
-function createParticles({object, color}) {
+// star background
+for (let i = 0; i < 100; i++) {
+  particles.push(new Particle({
+    position: {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height
+    },
+    velocity: {
+      x: 0,
+      y: .3
+    },
+    radius: 2,
+    color: 'white'
+  }))
+}
+
+function createParticles({object, color, fades}) {
   for (let i = 0; i < 15; i++) {
     particles.push(new Particle({
       position: {
@@ -280,17 +302,26 @@ function createParticles({object, color}) {
         y: (Math.random() - .5) * 2
       },
       radius: Math.random() * 3,
-      color: color
+      color: color,
+      fades: true
     }))
   }
 }
 
 function animate() {
+if (!game.active) return
+
   requestAnimationFrame(animate)
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
   player.update()
   particles.forEach((particle, i) => {
+
+    if (particle.position.y - particle.radius >= canvas.height) {
+      particle.position.x = Math.random() * canvas.width
+      particle.position.y = -particle.radius
+    }
+
     if (particle.opacity <= 0) {
       setTimeout(() => {
         particles.splice(i, 1)
@@ -319,13 +350,21 @@ function animate() {
        invaderProjectile.position.x + invaderProjectile.width >= player.position.x &&
        invaderProjectile.position.x <= player.position.x + player.width
        ) {
+        console.log('YOU LOSE!')
         setTimeout(() => {
           invaderProjectiles.splice(index, 1)
+          player.opacity = 0
+          game.over = true
         }, 0)
-         console.log('YOU LOSE!')
+
+        setTimeout(() => {
+          game.active = false
+        }, 2000)
+
          createParticles({
           object: player,
-          color: 'red'
+          color: 'red',
+          fades: true
         })
        }
   })
@@ -369,7 +408,8 @@ function animate() {
             if(invaderFound && projectileFound) {
              createParticles({
                object: invader,
-               color: 'yellow'
+               color: 'yellow',
+               fades: true
              })
 
               grid.invaders.splice(i, 1)
@@ -418,6 +458,8 @@ function animate() {
 animate()
 
 addEventListener('keydown', ({key}) => {
+if (game.over) return
+
   switch (key) {
     case 'a':
       // console.log('left')
@@ -445,6 +487,7 @@ addEventListener('keydown', ({key}) => {
 })
 
 addEventListener('keyup', ({key}) => {
+
   switch (key) {
     case 'a':
       // console.log('left')
