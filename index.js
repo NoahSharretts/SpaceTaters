@@ -155,7 +155,7 @@ class Invader {
   }
 
   shoot(InvaderProjectiles) {
-    InvaderProjectiles.push(new InvaderProjectile({
+    invaderProjectiles.push(new InvaderProjectile({
       position: {
         x: this.position.x + this.width / 2,
         y: this.position.y + this.height
@@ -218,7 +218,7 @@ class Grid {
 
 const player = new Player()
 const projectiles = []
-const grids = [ new Grid() ]
+const grids = []
 const invaderProjectiles = []
 
 const keys = {
@@ -251,6 +251,14 @@ function animate() {
       invaderProjectile.update()
     }
     invaderProjectile.update()
+
+    if (
+       invaderProjectile.position.y + invaderProjectile.height >= player.position.y &&
+       invaderProjectile.position.x + invaderProjectile.width >= player.position.x &&
+       invaderProjectile.position.x <= player.position.x + player.width
+       ) {
+         console.log('YOU LOSE!')
+       }
   })
   projectiles.forEach((projectile, index) => {
     if (projectile.position.y + projectile.radius <= 0) {
