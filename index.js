@@ -1,5 +1,8 @@
+const scoreEl = document.querySelector('#scoreEl')
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
+
+// console.log(scoreEl, 'scoreEl')
 
 canvas.width = innerWidth
 canvas.height = innerHeight
@@ -272,6 +275,7 @@ let game = {
   over: false,
   active: true
 }
+let score = 0
 console.log(randomInterval)
 
 // star background
@@ -406,6 +410,9 @@ if (!game.active) return
 
             //remove invader and projectile
             if(invaderFound && projectileFound) {
+             score += 100
+            //  console.log(score, 'score')
+             scoreEl.innerHTML = score
              createParticles({
                object: invader,
                color: 'yellow',
